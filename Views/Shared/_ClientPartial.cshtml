@@ -1,0 +1,4 @@
+﻿@if (User.IsInRole("普通顾客"))
+{
+    <li>@Html.RouteLink("我的购物车", "Default", new { Controller = "Order", Action = "Index" })</li>
+}

@@ -1,0 +1,148 @@
+﻿@model  PagedList.IPagedList<WebApplication7.Models.Product>
+@using PagedList.Mvc
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+@section styles{
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
+    <style type="text/css">
+
+        .form-control, .control-label 
+        {
+            margin-left:8px;
+        }
+    </style>  
+
+    <style>
+        @@media screen and (min-width:768px){
+            .form-control {
+                width: 10vw;
+            }
+        }
+    </style>  
+
+}
+
+<div class="well">
+    @using(Html.BeginForm("Index","Product",FormMethod.Get,new{ @class="form-inline"}))
+    {
+        <div class="form-group">
+            @Html.LabelFor(x => x.First().Category, new { @class="control-label"})
+            <select name="Category" class="form-control">
+                <option value="">--全部商品--</option>
+                @foreach (var item in (List<string>)ViewBag.Categories)
+                {
+                    var selectedCategory = ViewBag.SelectedCategory??"";
+                    if (selectedCategory == item) 
+                    { 
+                        <option value="@item" selected>@item</option>
+                    }
+                    else
+                    {
+                        <option value="@item">@item</option>
+                    }                    
+                }                
+            </select>
+        </div>   
+        
+        <div class="form-group">
+            @Html.LabelFor(x => x.First().Price, new { @class="control-label"}) 
+            @Html.TextBox("StartPrice", null, new { @class="form-control",type="Number",min="0",placeholder="最低价格"}) -
+            @Html.TextBox("EndPrice", null, new { @class = "form-control", type = "Number", min = "0", placeholder = "最高价格" })            
+        </div>
+        
+        <div class="form-group">
+            @Html.LabelFor(x => x.First().ProductName, new { @class="control-label"}) 
+            @Html.TextBox("ProductName",null, new { @class = "form-control" })    
+        </div>
+        
+        <button type="submit" class="btn btn-primary" ><span class="glyphicon glyphicon-search"></span>搜索</button> 
+        @Html.ActionLink("添加商品", "Create", null, new { @class="btn btn-success" })
+    }
+    
+</div>
+<table class="table">
+    <tr>
+        <th>
+            <a href="/Product?sortOrder=@ViewBag.NameSort&Category=@ViewBag.Category&StartPrice=@ViewBag.StartPrice&EndPrice=@ViewBag.EndPrice">
+                @if (!((string)ViewBag.SortOrder).Contains("productName"))
+                {
+                    <span class="glyphicon glyphicon-sort"></span>
+                }
+                else if (((string)ViewBag.SortOrder).Contains("desc"))
+                {
+                    <span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+                }
+                else
+                {
+                    <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                }
+            商品名称</a>
+        </th>
+        <th class="text-primary">
+            @Html.DisplayNameFor(model => model.First().Image)
+        </th>
+        <th>
+            <a href="/Product?sortOrder=@ViewBag.PriceSort&Category=@ViewBag.Category&StartPrice=@ViewBag.StartPrice&EndPrice=@ViewBag.EndPrice">
+                @if (!((string)ViewBag.SortOrder).Contains("price"))
+                {
+                    <span class="glyphicon glyphicon-sort"></span>
+                }
+                else if (((string)ViewBag.SortOrder).Contains("desc"))
+                {
+                    <span class="glyphicon glyphicon-sort-by-order-alt"></span>
+                }
+                else
+                {
+                    <span class="glyphicon glyphicon-sort-by-order"></span>
+                }
+                商品价格
+            </a>
+        </th>
+        <th>
+            <a href="/Product?sortOrder=@ViewBag.CategorySort&Category=@ViewBag.Category&StartPrice=@ViewBag.StartPrice&EndPrice=@ViewBag.EndPrice">
+                @if (!((string)ViewBag.SortOrder).Contains("category"))
+                {
+                    <span class="glyphicon glyphicon-sort"></span>
+                }
+                else if (((string)ViewBag.SortOrder).Contains("desc"))
+                {
+                    <span class="glyphicon glyphicon-sort-by-alphabet-alt"></span>
+                }
+                else
+                {
+                    <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                }
+                商品类别
+            </a>
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProductName)
+        </td>
+        <td>
+            <img src="@item.Image" class="img-thumbnail img-responsive" style="width:50px; height:50px;"/>
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Price)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Category)
+        </td>
+        <td>
+            @Html.ActionLink("商品详情", "Details", new { id = item.ProductID }, new { @class="btn btn-default"})
+        </td>
+    </tr>
+}
+
+</table>
+
+第 @Model.PageNumber 页 / 共 @Model.PageCount 页
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page, Category = ViewBag.Category, sortOrder=ViewBag.SortOrder,
+    StartPrice = ViewBag.StartPrice, EndPrice=ViewBag.EndPrice, ProductName=ViewBag.ProductName }))

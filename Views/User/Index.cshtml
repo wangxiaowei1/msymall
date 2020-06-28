@@ -1,0 +1,48 @@
+﻿@model IEnumerable<WebApplication7.Models.UserViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Roles)
+        </th>
+        <th>
+            操作
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserName)
+        </td>
+        <td>
+            @foreach (var i in item.Roles)
+            {
+                <span class="badge">@i</span>
+            }
+            @if (item.Roles.Count() == 0)
+            {
+                <span class="text-warning">未设置角色</span>
+            }
+        </td>
+        <td>
+            @Html.ActionLink("编辑", "Edit", new { id = item.Id }, new { @class = "btn btn-xs btn-primary" })
+            @Html.ActionLink("详细", "Details", new { id = item.Id }, new { @class = "btn btn-xs btn-success" })
+            @Html.ActionLink("删除", "Delete", new { id = item.Id }, new { @class = "btn btn-xs btn-danger" })
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,0 +1,5 @@
+﻿@if (User.IsInRole("管理员"))
+{
+    <li>@Html.RouteLink("角色列表", "Default", new { Controller = "Role", Action = "Index" })</li>
+    <li>@Html.RouteLink("用户列表", "Default", new { Controller = "User", Action = "Index" })</li>
+}

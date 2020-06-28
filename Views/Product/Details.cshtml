@@ -1,0 +1,33 @@
+﻿@model WebApplication7.Models.Product
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Product</h4>
+	<hr />
+
+    <div class="row">
+        <div class="col-md-4 col-sm-offset-3" >
+            <img src="@Model.Image" class="img-thumbnail img-responsive" />
+        </div>
+        <p class="h4">@Html.DisplayFor(model => model.ProductName)</p>
+        <p class="h4 text-danger">@Html.DisplayFor(model => model.Price)</p>
+        <p class="h4 text-primary">@Html.DisplayFor(model => model.Category)</p>
+        <p>
+            <a href="@Url.Action("AddToCart", "Product", new { id=@Model.ProductID})" class="btn btn-danger">
+                <span class="glyphicon glyphicon-shopping-cart"></span> 加入购物车
+            </a>
+        </p>
+
+    </div>
+            
+
+</div>
+<p>
+    @*@Html.ActionLink("Edit", "Edit", new { id = Model.ProductID }) |*@
+    @Html.ActionLink("返回商品列表", "Index")
+</p>
