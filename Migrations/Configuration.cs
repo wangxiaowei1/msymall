@@ -24,6 +24,7 @@ namespace WebApplication7.Migrations
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data. E.g.
             //
+            //初始化Products表
             var products = new List<Product>() { 
                 new Product { ProductName = "外套", Image = "/Content/Images/1.jpg", Price = 86.8M, Category = "服装" },
                 new Product { ProductName = "T恤", Image = "/Content/Images/2.jpg", Price = 32.5M, Category = "服装" },
@@ -37,6 +38,7 @@ namespace WebApplication7.Migrations
             };
             context.Products.AddOrUpdate(x => x.ProductName, products.ToArray()); //该语句作用是将product列表每条记录添加到数据库中
 
+            //初始化Roles表
             var roles = new List<ApplicationRole>()
             {
                 new ApplicationRole() { Name = "管理员", CreateTime = DateTime.Now },
@@ -45,17 +47,18 @@ namespace WebApplication7.Migrations
             context.Roles.AddOrUpdate(x => x.Name, roles.ToArray());
             context.SaveChanges();
 
+            //初始化Users表，创建一个管理员“陈雪”
             if (context.Users.Where(x => x.UserName == "陈雪").Count() <= 0)
             {
                 var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-                var user = new ApplicationUser() { UserName = "ADMINUSER" };
+                var user = new ApplicationUser() { UserName = "ADMINUSER" };    //先用一个英文字符串，创建一个用户
                 var result = userManager.Create(user, "123456");
 
                 if (result.Succeeded)
                 {
-                    context.Users.Find(user.Id).UserName = "陈雪";
+                    context.Users.Find(user.Id).UserName = "陈雪";    //再将该用户的改回中文名字“陈雪”
                     context.SaveChanges();
-                    userManager.AddToRole(user.Id, "管理员");
+                    userManager.AddToRole(user.Id, "管理员");  //将“陈雪”用户设置为管理员角色
                 }
             }
         }
